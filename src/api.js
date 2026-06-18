@@ -36,9 +36,9 @@ async function getAuthorizedJsonHeaders() {
 
 async function getAuthorizedHeaders() {
   const session = await fetchAuthSession();
-  const accessToken = session.tokens?.accessToken?.toString() || "";
+  const idToken = session.tokens?.idToken?.toString() || "";
 
   return {
-    Authorization: `Bearer ${accessToken}`,
+    Authorization: `Bearer ${idToken}`,
   };
 }
