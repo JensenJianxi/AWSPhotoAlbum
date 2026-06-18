@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { fetchUserAttributes } from "aws-amplify/auth";
 import { getMedia, getUploadUrl } from "./api";
 import "./App.css";
 
@@ -35,7 +36,7 @@ const STATUS_TEXT = {
 const THREE_CDN = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js";
 const VANTA_CDN = "https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js";
 
-function App() {
+function App({ signOut, user }) {
   const vantaRef = useRef(null);
   const vantaEffect = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -45,10 +46,37 @@ function App() {
   const [statusDetail, setStatusDetail] = useState("");
   const [mediaItems, setMediaItems] = useState([]);
   const [loadingMedia, setLoadingMedia] = useState(true);
+  const [accountEmail, setAccountEmail] = useState(user?.signInDetails?.loginId || "");
 
   useEffect(() => {
     loadMedia();
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadUserAttributes() {
+      try {
+        const attributes = await fetchUserAttributes();
+
+        if (!cancelled) {
+          setAccountEmail(
+            attributes.email || user?.signInDetails?.loginId || user?.username || ""
+          );
+        }
+      } catch {
+        if (!cancelled) {
+          setAccountEmail(user?.signInDetails?.loginId || user?.username || "");
+        }
+      }
+    }
+
+    loadUserAttributes();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
 
   useEffect(() => {
     let cancelled = false;
@@ -224,11 +252,25 @@ function App() {
             <p>Serverless Media Upload Prototype</p>
           </div>
 
-          <div className="system-card">
-            <span className="pulse-dot" />
-            <div>
-              <strong>API Gateway</strong>
-              <small>POST /upload-url and GET /media</small>
+          <div className="hero-side">
+            <div className="system-card auth-card">
+              <span className="pulse-dot" />
+              <div className="auth-copy">
+                <span className="section-label">Authenticated Session</span>
+                <strong>Logged in as: {accountEmail || user?.username || "Unknown user"}</strong>
+                <small>Cognito User Pool: us-east-1_hqsv8CzsK</small>
+              </div>
+              <button className="sign-out-button" type="button" onClick={signOut}>
+                Logout
+              </button>
+            </div>
+
+            <div className="system-card">
+              <span className="pulse-dot" />
+              <div>
+                <strong>API Gateway</strong>
+                <small>POST /upload-url and GET /media</small>
+              </div>
             </div>
           </div>
         </section>

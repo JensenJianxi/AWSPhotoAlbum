@@ -62,6 +62,11 @@ button {
   animation: fade-in 520ms ease both;
 }
 
+.hero-side {
+  display: grid;
+  gap: 14px;
+}
+
 .hero-copy h1 {
   margin: 10px 0 8px;
   color: #111827;
@@ -106,6 +111,20 @@ button {
   border-radius: 8px;
 }
 
+.auth-card {
+  align-items: flex-start;
+}
+
+.auth-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.auth-copy .section-label {
+  display: block;
+  margin-bottom: 6px;
+}
+
 .system-card strong,
 .system-card small {
   display: block;
@@ -118,6 +137,28 @@ button {
 .system-card small {
   margin-top: 4px;
   color: #667085;
+}
+
+.sign-out-button {
+  align-self: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 999px;
+  color: #0f172a;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.sign-out-button:hover {
+  transform: translateY(-2px);
+  border-color: #93c5fd;
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.14);
 }
 
 .pulse-dot {
@@ -472,6 +513,14 @@ button {
 
   .system-card {
     min-width: 0;
+  }
+
+  .auth-card {
+    flex-wrap: wrap;
+  }
+
+  .sign-out-button {
+    width: 100%;
   }
 
   .panel-heading,
