@@ -1,11 +1,8 @@
-const userPoolClientId =
-  import.meta.env.VITE_COGNITO_USER_POOL_CLIENT_ID || "APP_CLIENT_ID";
-
 export const authConfig = {
   Auth: {
     Cognito: {
       userPoolId: "us-east-1_hqsv8CzsK",
-      userPoolClientId,
+      userPoolClientId: "1fei3fjc3lhnsg0mq9i1gtej3d",
       loginWith: {
         email: true,
       },
