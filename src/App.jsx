@@ -380,16 +380,38 @@ function MediaSection({ title, mediaType, items, loading }) {
 }
 
 function MediaCard({ item, mediaType }) {
-  const processedPath = item.processedS3Key || "Processed output pending";
-  const rawPath = item.rawS3Key || "Original source path unavailable";
-
+  const processedPath =
+    item.processedS3Key || "Processed output pending";
+  const rawPath =
+    item.rawS3Key || "Original source path unavailable";
+  const previewUrl =
+    mediaType === "image"
+      ? `https://g3-photoalbum-processed-media.s3.amazonaws.com/${
+          item.thumbnailS3Key || item.processedS3Key
+        }`
+      : null;
   return (
     <article className="media-card">
-      <div className={`media-badge ${mediaType}`}>{mediaType}</div>
+      <div className={`media-badge ${mediaType}`}>
+        {mediaType}
+      </div>
+
+      {mediaType === "image" && previewUrl && (
+        <img
+          src={previewUrl}
+          alt={item.friendlyDisplayName}
+          className="media-thumbnail"
+        />
+      )}
       <div className="media-card-body">
         <h3>{item.friendlyDisplayName}</h3>
-        <p>Processed: {processedPath}</p>
-        <span>Source: {rawPath}</span>
+        <p>
+          <strong>Processed:</strong> {processedPath}
+        </p>
+
+        <span>
+          <strong>Source:</strong> {rawPath}
+        </span>
       </div>
     </article>
   );
@@ -431,15 +453,18 @@ function normalizeMediaList(data) {
     : data?.items || data?.media || data?.records || data?.files || [];
 
   return items
-    .map((item) => ({
-      mediaId: item.mediaId || "",
-      mediaType: String(item.mediaType || "").toLowerCase(),
-      rawS3Key: item.rawS3Key || "",
-      processedS3Key: item.processedS3Key || "",
-      displayName: item.displayName || "",
-      originalFileName: item.originalFileName || "",
-      createdAt: item.createdAt || "",
-    }))
+.map((item) => ({
+
+  mediaId: item.mediaId || "",
+  mediaType: String(item.mediaType || "").toLowerCase(),
+  rawS3Key: item.rawS3Key || "",
+  processedS3Key: item.processedS3Key || "",
+  thumbnailS3Key: item.thumbnailS3Key || "",
+  displayName: item.displayName || "",
+  originalFileName: item.originalFileName || "",
+  createdAt: item.createdAt || "",
+
+}))
     .filter((item) => item.mediaId && (item.mediaType === "image" || item.mediaType === "video"))
     .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
     .map(addFriendlyDisplayName());

@@ -19,6 +19,14 @@ body {
     linear-gradient(135deg, #f8fafc 0%, #eef4ff 45%, #f7fbf8 100%);
 }
 
+.media-thumbnail {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
 .vanta-background {
   position: fixed;
   inset: 0;
